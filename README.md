@@ -136,3 +136,26 @@ var retval = (int)dynamicBinder.MethodName(arg1, arg2);
 var lateBinder = new LateBinder(obj);
 var retval = (int)lateBinder.Call("MethodName", arg1, arg2);
 ```
+
+Note
+------
+
+### "reinventing the wheel"
+There are many many packages more than 50 about reflection & private member accessing library.
+
+https://www.nuget.org/packages?q=Tags%3A%22reflection%22
+
+But I couldn't find any library which has my favorit syntax and features :).
+
+So I deside to "reinvent the wheel".
+
+
+### Performance issue
+
+This library "DynamicBinder" and "LateBinder" may be very slowly because the implementation of
+this library is calling reflection API directory without chache, compile to delegate, complile to expression,
+and so on.
+
+There is plenty room for improvement to more faster, more high performance.
+
+If you prefer, you can fork this source codes and improve it.
