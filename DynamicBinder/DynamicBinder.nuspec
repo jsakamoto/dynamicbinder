@@ -1,0 +1,33 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>J.Sakamoto</authors>
+    <owners>J.Sakamoto</owners>
+    <licenseUrl>https://github.com/jsakamoto/dynamicbinder/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/jsakamoto/dynamicbinder</projectUrl>
+    <!--
+    <iconUrl/>
+    -->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>
+      obj.ToLateBind().Call("PrivateMethodName", arg1, arg2,...); / obj.ToLateBind().Prop["PrivatePropertyName"] = newValue; /
+      obj.ToDynamic().PrivateMethodName(arg1, arg2,...); / obj.ToDynamic().PrivatePropertyName = newValue;
+    </summary>
+    <description>
+      This library allows you to dynamic access to object methods, properties, and fields 
+      even if they are private members by Reflection technology.
+      You can access the both of object instance members and class static members by name 
+      that specified string argument at runtime not compile time, or C# 4.0 "dynamic" syntax.
+    </description>
+    <releaseNotes>
+      <![CDATA[
+      ]]>
+    </releaseNotes>
+    <tags>reflection,dynamic,late binding</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>
