@@ -119,6 +119,7 @@ If you feel these extension method is dirty, you can chose no using these extens
 
 Instead, you can use LateBinder class and DynamicBinder class like follow code.
 
+    // do not open namespace "Toolbelt.DynamicBinderExtension".
     using Toolbelt;
     ...
     dynamic dynamicBinder = new DynamicBinder(obj);
