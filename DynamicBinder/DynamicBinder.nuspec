@@ -24,6 +24,8 @@
     </description>
     <releaseNotes>
       <![CDATA[
+      v.1.1
+      - Support base class members access.
       ]]>
     </releaseNotes>
     <tags>reflection,dynamic,late binding</tags>

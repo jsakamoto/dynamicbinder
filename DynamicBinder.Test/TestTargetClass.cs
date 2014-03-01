@@ -48,4 +48,8 @@ namespace DynamicBinderTest
             return "Method-F(double): " + name + " / " + age.ToString();
         }
     }
+
+    public class DerivedTestTargetClass : TestTargetClass
+    {
+    }
 }

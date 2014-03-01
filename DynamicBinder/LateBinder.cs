@@ -51,8 +51,26 @@ namespace Toolbelt
         public object Call(string methodName, params object[] args)
         {
             var types = args.Select(_ => _.GetType()).ToArray();
-            var methodInfo = _TypeOfTarget.GetMethod(methodName, _BindingFlags, null, types, null);
+            var methodInfo = FindMember(t => t.GetMethod(methodName, _BindingFlags, null, types, null));
             return methodInfo.Invoke(_Target, args);
+        }
+
+        protected static IEnumerable<Type> EnumType(Type type)
+        {
+            for (; type != null; type = type.BaseType)
+            {
+                yield return type;
+            }
+        }
+
+        internal T FindMember<T>(Func<Type, T> finder, bool throwExceptionIfMemberNotFound = true)
+        {
+            var member = EnumType(_TypeOfTarget)
+                .Select(t => finder(t))
+                .FirstOrDefault(m => m != null);
+            if (member == null && throwExceptionIfMemberNotFound)
+                throw new Exception("Member " + member + " not found.");
+            return member;
         }
 
         public class PropertyBinder
@@ -68,19 +86,19 @@ namespace Toolbelt
             {
                 get
                 {
-                    var propInfo = _Binder._TypeOfTarget.GetProperty(propName, _Binder._BindingFlags);
+                    var propInfo = _Binder.FindMember(t => t.GetProperty(propName, _Binder._BindingFlags));
                     return propInfo.GetValue(_Binder._Target, null);
                 }
                 set
                 {
-                    var propInfo = _Binder._TypeOfTarget.GetProperty(propName, _Binder._BindingFlags);
+                    var propInfo = _Binder.FindMember(t => t.GetProperty(propName, _Binder._BindingFlags));
                     propInfo.SetValue(_Binder._Target, value, null);
                 }
             }
 
             public bool Has(string propName)
             {
-                return _Binder._TypeOfTarget.GetProperty(propName, _Binder._BindingFlags) != null;
+                return _Binder.FindMember(t => t.GetProperty(propName, _Binder._BindingFlags), false) != null;
             }
         }
 
@@ -97,19 +115,19 @@ namespace Toolbelt
             {
                 get
                 {
-                    var propInfo = _Binder._TypeOfTarget.GetField(fieldName, _Binder._BindingFlags);
-                    return propInfo.GetValue(_Binder._Target);
+                    var fieldInfo = _Binder.FindMember(t => t.GetField(fieldName, _Binder._BindingFlags));
+                    return fieldInfo.GetValue(_Binder._Target);
                 }
                 set
                 {
-                    var propInfo = _Binder._TypeOfTarget.GetField(fieldName, _Binder._BindingFlags);
-                    propInfo.SetValue(_Binder._Target, value);
+                    var fieldInfo = _Binder.FindMember(t => t.GetField(fieldName, _Binder._BindingFlags));
+                    fieldInfo.SetValue(_Binder._Target, value);
                 }
             }
 
             public bool Has(string fieldName)
             {
-                return _Binder._TypeOfTarget.GetField(fieldName, _Binder._BindingFlags) != null;
+                return _Binder.FindMember(t => t.GetField(fieldName, _Binder._BindingFlags), false) != null;
             }
         }
     }
