@@ -9,7 +9,7 @@ namespace DynamicBinderTest
     public class LateBinderTest
     {
         [TestMethod]
-        public void CallOverloadedPrivateInstanceMethod_by_Accessor()
+        public void CallOverloadedPrivateInstanceMethod_by_LateBinder()
         {
             object obj = new TestTargetClass();
             
@@ -23,7 +23,7 @@ namespace DynamicBinderTest
         }
 
         [TestMethod]
-        public void GetAndSetPrivateInstanceProperty_by_Accessor()
+        public void GetAndSetPrivateInstanceProperty_by_LateBinder()
         {
             object obj = new TestTargetClass();
             obj.ToLateBind().Prop["PropA"]
@@ -37,7 +37,7 @@ namespace DynamicBinderTest
         }
 
         [TestMethod]
-        public void GetAndSetPrivateInstanceField_by_Accessor()
+        public void GetAndSetPrivateInstanceField_by_LateBinder()
         {
             object obj = new TestTargetClass();
             obj.ToLateBind().Field["_FieldB"]
@@ -51,67 +51,67 @@ namespace DynamicBinderTest
         }
 
         [TestMethod]
-        public void CallOverloadedPrivateStaticMethod_by_Accessor()
+        public void CallOverloadedPrivateStaticMethod_by_LateBinder()
         {
-            var accessor = LateBinder.Create(typeof(TestTargetClass));
+            var binder = LateBinder.Create(typeof(TestTargetClass));
             
-            accessor.Call("MethodF", "Gentoo", 18)
+            binder.Call("MethodF", "Gentoo", 18)
                 .IsInstanceOf<string>()
                 .Is("Method-F(int): Gentoo / 18");
 
-            accessor.Call("MethodF", "RockHoper", 31.4)
+            binder.Call("MethodF", "RockHoper", 31.4)
                 .IsInstanceOf<string>()
                 .Is("Method-F(double): RockHoper / 31.4");
         }
 
         [TestMethod]
-        public void GetAndSetPrivateStaticProperty_by_Accessor()
+        public void GetAndSetPrivateStaticProperty_by_LateBinder()
         {
-            var accessor = LateBinder.Create<TestTargetClass>();
-            accessor.Prop["PropD"]
+            var binder = LateBinder.Create<TestTargetClass>();
+            binder.Prop["PropD"]
                 .IsNull();
 
             try
             {
-                accessor.Prop["PropD"] = "FizzBuzz";
+                binder.Prop["PropD"] = "FizzBuzz";
 
-                accessor.Prop["PropD"]
+                binder.Prop["PropD"]
                     .IsInstanceOf<string>()
                     .Is("FizzBuzz");
             }
             finally
             {
-                accessor.Prop["PropD"] = null;
+                binder.Prop["PropD"] = null;
             }
         }
 
         [TestMethod]
-        public void GetAndSetPrivateStaticField_by_Accessor()
+        public void GetAndSetPrivateStaticField_by_LateBinder()
         {
             object obj = new TestTargetClass();
-            var accessor = LateBinder.Create(obj.GetType());
+            var binder = LateBinder.Create(obj.GetType());
 
-            accessor.Field["_FieldE"]
+            binder.Field["_FieldE"]
                 .IsInstanceOf<string>()
                 .Is("Static Foo");
 
             try
             {
-                accessor.Field["_FieldE"] = "Static Bar";
+                binder.Field["_FieldE"] = "Static Bar";
 
-                accessor.Field["_FieldE"]
+                binder.Field["_FieldE"]
                     .Is("Static Bar");
             }
             finally
             {
-                accessor.Field["_FieldE"] = "Static Foo";
+                binder.Field["_FieldE"] = "Static Foo";
             }
         }
         
         // -------------------------
 
         [TestMethod]
-        public void CallOverloadedPrivateInstanceMethod_of_DerivedClass_by_Accessor()
+        public void CallOverloadedPrivateInstanceMethod_of_DerivedClass_by_LateBinder()
         {
             object obj = new DerivedTestTargetClass();
             
@@ -125,7 +125,7 @@ namespace DynamicBinderTest
         }
 
         [TestMethod]
-        public void GetAndSetPrivateInstanceProperty_of_DerivedClass_by_Accessor()
+        public void GetAndSetPrivateInstanceProperty_of_DerivedClass_by_LateBinder()
         {
             object obj = new DerivedTestTargetClass();
             obj.ToLateBind().Prop["PropA"]
@@ -139,7 +139,7 @@ namespace DynamicBinderTest
         }
 
         [TestMethod]
-        public void GetAndSetPrivateInstanceField_of_DerivedClass_by_Accessor()
+        public void GetAndSetPrivateInstanceField_of_DerivedClass_by_LateBinder()
         {
             object obj = new DerivedTestTargetClass();
             obj.ToLateBind().Field["_FieldB"]
@@ -153,60 +153,60 @@ namespace DynamicBinderTest
         }
 
         [TestMethod]
-        public void CallOverloadedPrivateStaticMethod_of_DerivedClass_by_Accessor()
+        public void CallOverloadedPrivateStaticMethod_of_DerivedClass_by_LateBinder()
         {
-            var accessor = LateBinder.Create(typeof(DerivedTestTargetClass));
+            var binder = LateBinder.Create(typeof(DerivedTestTargetClass));
 
-            accessor.Call("MethodF", "Gentoo", 18)
+            binder.Call("MethodF", "Gentoo", 18)
                 .IsInstanceOf<string>()
                 .Is("Method-F(int): Gentoo / 18");
 
-            accessor.Call("MethodF", "RockHoper", 31.4)
+            binder.Call("MethodF", "RockHoper", 31.4)
                 .IsInstanceOf<string>()
                 .Is("Method-F(double): RockHoper / 31.4");
         }
 
         [TestMethod]
-        public void GetAndSetPrivateStaticProperty_of_DerivedClass_by_Accessor()
+        public void GetAndSetPrivateStaticProperty_of_DerivedClass_by_LateBinder()
         {
-            var accessor = LateBinder.Create<DerivedTestTargetClass>();
-            accessor.Prop["PropD"]
+            var binder = LateBinder.Create<DerivedTestTargetClass>();
+            binder.Prop["PropD"]
                 .IsNull();
 
             try
             {
-                accessor.Prop["PropD"] = "FizzBuzz";
+                binder.Prop["PropD"] = "FizzBuzz";
 
-                accessor.Prop["PropD"]
+                binder.Prop["PropD"]
                     .IsInstanceOf<string>()
                     .Is("FizzBuzz");
             }
             finally
             {
-                accessor.Prop["PropD"] = null;
+                binder.Prop["PropD"] = null;
             }
         }
 
         [TestMethod]
-        public void GetAndSetPrivateStaticField_of_DerivedClass_by_Accessor()
+        public void GetAndSetPrivateStaticField_of_DerivedClass_by_LateBinder()
         {
             object obj = new DerivedTestTargetClass();
-            var accessor = LateBinder.Create(obj.GetType());
+            var binder = LateBinder.Create(obj.GetType());
 
-            accessor.Field["_FieldE"]
+            binder.Field["_FieldE"]
                 .IsInstanceOf<string>()
                 .Is("Static Foo");
 
             try
             {
-                accessor.Field["_FieldE"] = "Static Bar";
+                binder.Field["_FieldE"] = "Static Bar";
 
-                accessor.Field["_FieldE"]
+                binder.Field["_FieldE"]
                     .Is("Static Bar");
             }
             finally
             {
-                accessor.Field["_FieldE"] = "Static Foo";
+                binder.Field["_FieldE"] = "Static Foo";
             }
         }
     }
