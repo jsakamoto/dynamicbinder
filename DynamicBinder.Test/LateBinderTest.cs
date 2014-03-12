@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Toolbelt;
 using Toolbelt.DynamicBinderExtension;
@@ -208,6 +210,26 @@ namespace DynamicBinderTest
             {
                 binder.Field["_FieldE"] = "Static Foo";
             }
+        }
+
+
+        [TestMethod]
+        public void CallOverloadedPrivateInstanceMethod_by_LateBinder_with_Cache()
+        {
+            object obj = new TestTargetClass();
+            var cache = new Dictionary<Type, IDictionary<string, MemberInfo>>();
+
+            obj.ToLateBind(cache).Call("MethodC", "Adelie")
+                .IsInstanceOf<string>()
+                .Is("Method-C by string: Adelie");
+
+            obj.ToLateBind(cache).Call("MethodC", 27)
+                .IsInstanceOf<int>()
+                .Is(27);
+
+            obj.ToLateBind(cache).Call("MethodC", "Emperor")
+                .IsInstanceOf<string>()
+                .Is("Method-C by string: Emperor");
         }
     }
 }

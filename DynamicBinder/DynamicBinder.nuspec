@@ -24,6 +24,9 @@
     </description>
     <releaseNotes>
       <![CDATA[
+      v.1.2
+      - Add avility of caching System.Reflection.MemberInfo (use SetCache(disctionary) method)
+      - Add GetInfo(name) method on PropertyBinder and FieldBinder that returned System.Reflection.MemberInfo.
       v.1.1
       - Support base class members access.
       ]]>
