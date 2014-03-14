@@ -31,6 +31,18 @@ namespace DynamicBinderTest
             return age;
         }
 
+        private class SubItemClass
+        {
+            public string Name { get; set; }
+            private int Value { get; set; }
+            public SubItemClass(string name, int value) { Name = name; Value = value; }
+        }
+
+        private static SubItemClass GetSubItem()
+        {
+            return new SubItemClass("John", 40);
+        }
+
         // Static members
         // ==============
 

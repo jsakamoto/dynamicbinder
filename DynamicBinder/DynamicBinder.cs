@@ -24,6 +24,10 @@ namespace Toolbelt
         {
             if (base.TryInvokeMember(binder, args, out result)) return true;
             result = _Binder.Call(binder.Name, args);
+            if (Type.GetTypeCode(result.GetType()) == TypeCode.Object)
+            {
+                result = new DynamicBinder(result);
+            }
             return true;
         }
 

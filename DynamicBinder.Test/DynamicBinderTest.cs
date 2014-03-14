@@ -99,6 +99,16 @@ namespace DynamicBinderTest
             }
         }
 
+        [TestMethod]
+        public void RetrieveClassObject_by_Dynamic()
+        {
+            var binder = DynamicBinder.Create<TestTargetClass>();
+           
+            var subItem = binder.GetSubItem();
+            ((string)subItem.Name).Is("John");
+            ((int)subItem.Value).Is(40);
+        }
+
         // -------------------------
 
         [TestMethod]
