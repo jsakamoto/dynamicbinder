@@ -9,6 +9,20 @@ namespace DynamicBinderTest
 {
     public class TestTargetClass
     {
+        public class SubItemClass1
+        {
+            public string Name { get; set; }
+            private int Value { get; set; }
+            public SubItemClass1(string name, int value) { Name = name; Value = value; }
+        }
+
+        private class SubItemClass2
+        {
+            public string Name { get; set; }
+            private int Value { get; set; }
+            public SubItemClass2(string name, int value) { Name = name; Value = value; }
+        }
+
         // Instance members
         // ==============
 
@@ -16,9 +30,16 @@ namespace DynamicBinderTest
 
         private DateTime _FieldB = DateTime.Parse("2014/02/13 14:27:56");
 
+        private SubItemClass1 PropG { get; set; }
+
+        private SubItemClass2 PropH { get; set; }
+        
+        /// <summary>Constractor</summary>
         public TestTargetClass()
         {
             PropA = "Fizz";
+            PropG = new SubItemClass1("Sam", 33);
+            PropH = new SubItemClass2("Alice", 29);
         }
 
         private string MethodC(string name)
@@ -29,18 +50,6 @@ namespace DynamicBinderTest
         private int MethodC(int age)
         {
             return age;
-        }
-
-        private class SubItemClass
-        {
-            public string Name { get; set; }
-            private int Value { get; set; }
-            public SubItemClass(string name, int value) { Name = name; Value = value; }
-        }
-
-        private static SubItemClass GetSubItem()
-        {
-            return new SubItemClass("John", 40);
         }
 
         // Static members
@@ -58,6 +67,11 @@ namespace DynamicBinderTest
         private static string MethodF(string name, double age)
         {
             return "Method-F(double): " + name + " / " + age.ToString();
+        }
+
+        private static SubItemClass2 GetSubItem()
+        {
+            return new SubItemClass2("John", 40);
         }
     }
 

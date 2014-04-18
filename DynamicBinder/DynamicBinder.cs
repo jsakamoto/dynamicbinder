@@ -23,11 +23,7 @@ namespace Toolbelt
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
             if (base.TryInvokeMember(binder, args, out result)) return true;
-            result = _Binder.Call(binder.Name, args);
-            if (Type.GetTypeCode(result.GetType()) == TypeCode.Object)
-            {
-                result = new DynamicBinder(result);
-            }
+            result = Wrap(_Binder.Call(binder.Name, args));
             return true;
         }
 
@@ -36,12 +32,12 @@ namespace Toolbelt
             if (base.TryGetMember(binder, out result)) return true;
             if (_Binder.Prop.Has(binder.Name))
             {
-                result = _Binder.Prop[binder.Name];
+                result = Wrap(_Binder.Prop[binder.Name]);
                 return true;
             }
             else if(_Binder.Field.Has(binder.Name))
             {
-                result = _Binder.Field[binder.Name];
+                result = Wrap(_Binder.Field[binder.Name]);
                 return true;
             }
             return false;
@@ -61,6 +57,13 @@ namespace Toolbelt
                 return true;
             }
             return false;
+        }
+
+        private static object Wrap(object obj)
+        {
+            return obj == null ? null :
+                Type.GetTypeCode(obj.GetType()) == TypeCode.Object ?
+                new DynamicBinder(obj) : obj;
         }
 
         public static dynamic Create<T>()
