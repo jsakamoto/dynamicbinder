@@ -14,6 +14,7 @@ namespace DynamicBinderTest
             public string Name { get; set; }
             private int Value { get; set; }
             public SubItemClass1(string name, int value) { Name = name; Value = value; }
+            public override string ToString() { return "Good Job!"; }
         }
 
         private class SubItemClass2
@@ -50,6 +51,11 @@ namespace DynamicBinderTest
         private int MethodC(int age)
         {
             return age;
+        }
+
+        public SubItemClass1 CreateSubItem1()
+        {
+            return new SubItemClass1("Jude", 47);
         }
 
         // Static members

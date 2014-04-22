@@ -56,6 +56,9 @@ namespace Toolbelt
             return this;
         }
 
+        /// <summary>get the object that late binding taret.</summary>
+        public object Object { get { return _Target; } } 
+
         public object Call(string methodName, params object[] args)
         {
             var argTypes = args.Select(_ => _.GetType()).ToArray();

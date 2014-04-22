@@ -147,7 +147,8 @@ namespace DynamicBinderTest
                 Person = new
                 {
                     Gender = Gender.Male,
-                    Birthday = DateTime.Parse("1970/01/15")
+                    Birthday = DateTime.Parse("1970/01/15"),
+                    ProgramingLangs = new[] { "C#", "F#" }
                 },
                 Count = 1
             };
@@ -156,13 +157,23 @@ namespace DynamicBinderTest
             DateTime birthday = obj.ToDynamic().Person.Birthday;
             int birthdayYear = obj.ToDynamic().Person.Birthday.Year;
             string birthdayMonth = obj.ToDynamic().Person.Birthday.ToLocalTime().Month.ToString();
+            string[] programingLangs = obj.ToDynamic().Person.ProgramingLangs;
             int count = obj.ToDynamic().Count;
 
             gender.Is(Gender.Male);
             birthday.Is(DateTime.Parse("1970/01/15"));
             birthdayYear.Is(1970);
             birthdayMonth.Is("1");
+            programingLangs.Is("C#", "F#");
             count.Is(1);
+        }
+
+        [TestMethod]
+        public void RetrieveReturnValueOfMethod()
+        {
+            object obj = new TestTargetClass();
+            var retval = obj.ToDynamic().CreateSubItem1() as DynamicBinder;
+            retval.Object.ToString().Is("Good Job!");
         }
 
         // -------------------------

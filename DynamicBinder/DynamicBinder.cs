@@ -20,6 +20,9 @@ namespace Toolbelt
             _Binder = new LateBinder(target);
         }
 
+        /// <summary>get the object that dynamic binding taret.</summary>
+        public object Object { get { return _Binder.Object; } }
+
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
             if (base.TryInvokeMember(binder, args, out result)) return true;
@@ -35,7 +38,7 @@ namespace Toolbelt
                 result = Wrap(_Binder.Prop[binder.Name]);
                 return true;
             }
-            else if(_Binder.Field.Has(binder.Name))
+            else if (_Binder.Field.Has(binder.Name))
             {
                 result = Wrap(_Binder.Field[binder.Name]);
                 return true;
@@ -57,6 +60,13 @@ namespace Toolbelt
                 return true;
             }
             return false;
+        }
+
+        public override bool TryConvert(ConvertBinder binder, out object result)
+        {
+            if (base.TryConvert(binder, out result)) return true;
+            result = _Binder.Object;
+            return true;
         }
 
         private static object Wrap(object obj)

@@ -24,6 +24,9 @@
     </description>
     <releaseNotes>
       <![CDATA[
+      v.1.5
+      - Enhance: Add "Object" property which expose the object that binding target.
+      - Fix bug: Can not extract class type object by DynamicBinder.
       v.1.4
       - Fix bug: Can not retrieve class type properties by DynamicBinder.
       v.1.3
