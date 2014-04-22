@@ -15,6 +15,8 @@ namespace Toolbelt
 
         protected BindingFlags _BindingFlags;
 
+        protected IDictionary<Type, IDictionary<string, MemberInfo>> _Cache;
+
         public PropertyBinder Prop { get; protected set; }
 
         public FieldBinder Field { get; protected set; }
@@ -48,10 +50,20 @@ namespace Toolbelt
             return new LateBinder(null, typeof(T));
         }
 
+        public LateBinder SetCache(IDictionary<Type, IDictionary<string, MemberInfo>> cache)
+        {
+            _Cache = cache;
+            return this;
+        }
+
         public object Call(string methodName, params object[] args)
         {
-            var types = args.Select(_ => _.GetType()).ToArray();
-            var methodInfo = FindMember(t => t.GetMethod(methodName, _BindingFlags, null, types, null));
+            var argTypes = args.Select(_ => _.GetType()).ToArray();
+            var memberSufix = "(" + string.Join(",", argTypes.Select(t => t.FullName)) + ")";
+            var methodInfo = FindMember(
+                methodName,
+                t => t.GetMethod(methodName, _BindingFlags, null, argTypes, null),
+                memberSufix: memberSufix);
             return methodInfo.Invoke(_Target, args);
         }
 
@@ -63,14 +75,56 @@ namespace Toolbelt
             }
         }
 
-        internal T FindMember<T>(Func<Type, T> finder, bool throwExceptionIfMemberNotFound = true)
+        protected IDictionary<string, MemberInfo> GetCacheOfMe()
         {
-            var member = EnumType(_TypeOfTarget)
-                .Select(t => finder(t))
-                .FirstOrDefault(m => m != null);
-            if (member == null && throwExceptionIfMemberNotFound)
-                throw new Exception("Member " + member + " not found.");
-            return member;
+            if (_Cache == null) return null;
+            var cacheOfMe = default(IDictionary<string, MemberInfo>);
+            lock (_Cache)
+            {
+                if (_Cache.TryGetValue(_TypeOfTarget, out cacheOfMe) == false)
+                {
+                    cacheOfMe = new Dictionary<string, MemberInfo>();
+                    _Cache.Add(_TypeOfTarget, cacheOfMe);
+                }
+            }
+            return cacheOfMe;
+        }
+
+        internal T FindMember<T>(
+            string memberName, 
+            Func<Type, T> finder, 
+            bool throwExceptionIfMemberNotFound = true,
+            string memberSufix = ""
+            ) where T : MemberInfo
+        {
+            Func<T> findMember = () =>
+            {
+                var memberInfo = EnumType(_TypeOfTarget)
+                    .Select(t => finder(t))
+                    .FirstOrDefault(m => m != null);
+                if (memberInfo == null && throwExceptionIfMemberNotFound)
+                    throw new Exception("Member " + memberName + memberSufix + " not found.");
+                return memberInfo;
+            };
+
+            var cacheOfMe = GetCacheOfMe();
+            if (cacheOfMe == null)
+            {
+                return findMember();
+            }
+            else
+            {
+                lock (cacheOfMe)
+                {
+                    var memberInfo = default(MemberInfo);
+                    if (cacheOfMe.TryGetValue(memberName + memberSufix, out memberInfo) == false)
+                    {
+                        memberInfo = findMember();
+                        cacheOfMe.Add(memberName + memberSufix, memberInfo);
+                    }
+                    return (T)memberInfo;
+                }
+            }
         }
 
         public class PropertyBinder
@@ -82,23 +136,28 @@ namespace Toolbelt
                 _Binder = accessor;
             }
 
+            public PropertyInfo GetInfo(string propName, bool throwExceptionIfMemberNotFound = true)
+            {
+                return _Binder.FindMember(propName, t => t.GetProperty(propName, _Binder._BindingFlags), throwExceptionIfMemberNotFound);
+            }
+
             public object this[string propName]
             {
                 get
                 {
-                    var propInfo = _Binder.FindMember(t => t.GetProperty(propName, _Binder._BindingFlags));
+                    var propInfo = GetInfo(propName);
                     return propInfo.GetValue(_Binder._Target, null);
                 }
                 set
                 {
-                    var propInfo = _Binder.FindMember(t => t.GetProperty(propName, _Binder._BindingFlags));
+                    var propInfo = GetInfo(propName);
                     propInfo.SetValue(_Binder._Target, value, null);
                 }
             }
 
             public bool Has(string propName)
             {
-                return _Binder.FindMember(t => t.GetProperty(propName, _Binder._BindingFlags), false) != null;
+                return GetInfo(propName, false) != null;
             }
         }
 
@@ -111,23 +170,28 @@ namespace Toolbelt
                 _Binder = accessor;
             }
 
+            public FieldInfo GetInfo(string fieldName, bool throwExceptionIfMemberNotFound = true)
+            {
+                return _Binder.FindMember(fieldName, t => t.GetField(fieldName, _Binder._BindingFlags), throwExceptionIfMemberNotFound);
+            }
+
             public object this[string fieldName]
             {
                 get
                 {
-                    var fieldInfo = _Binder.FindMember(t => t.GetField(fieldName, _Binder._BindingFlags));
+                    var fieldInfo = GetInfo(fieldName);
                     return fieldInfo.GetValue(_Binder._Target);
                 }
                 set
                 {
-                    var fieldInfo = _Binder.FindMember(t => t.GetField(fieldName, _Binder._BindingFlags));
+                    var fieldInfo = GetInfo(fieldName);
                     fieldInfo.SetValue(_Binder._Target, value);
                 }
             }
 
             public bool Has(string fieldName)
             {
-                return _Binder.FindMember(t => t.GetField(fieldName, _Binder._BindingFlags), false) != null;
+                return GetInfo(fieldName, false) != null;
             }
         }
     }

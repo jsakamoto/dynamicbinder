@@ -99,6 +99,72 @@ namespace DynamicBinderTest
             }
         }
 
+        [TestMethod]
+        public void RetrieveClassObject_by_Dynamic()
+        {
+            var binder = DynamicBinder.Create<TestTargetClass>();
+           
+            var subItem = binder.GetSubItem();
+            ((string)subItem.Name).Is("John");
+            ((int)subItem.Value).Is(40);
+        }
+
+        [TestMethod]
+        public void GetAndSetPropOfClassObject_by_Dynamic()
+        {
+            object obj = new TestTargetClass();
+            string name1 = obj.ToDynamic().PropH.Name;
+            int value1 = obj.ToDynamic().PropH.Value;
+            name1.Is("Alice");
+            value1.Is(29);
+
+            obj.ToDynamic().PropH.Name = "Bob";
+            obj.ToDynamic().PropH.Value = 37;
+            string name2 = obj.ToDynamic().PropH.Name;
+            int value2 = obj.ToDynamic().PropH.Value;
+            name2.Is("Bob");
+            value2.Is(37);
+
+            string name3 = obj.ToDynamic().PropG.Name;
+            int value3 = obj.ToDynamic().PropG.Value;
+            name3.Is("Sam");
+            value3.Is(33);
+
+            obj.ToDynamic().PropG = new TestTargetClass.SubItemClass1("Baby", 0);
+            string name4 = obj.ToDynamic().PropG.Name;
+            int value4 = obj.ToDynamic().PropG.Value;
+            name4.Is("Baby");
+            value4.Is(0);
+        }
+
+        public enum Gender { Male, Female }
+
+        [TestMethod]
+        public void GetPropOfAnonymousType_by_Dynamic()
+        {
+            object obj = new
+            {
+                Person = new
+                {
+                    Gender = Gender.Male,
+                    Birthday = DateTime.Parse("1970/01/15")
+                },
+                Count = 1
+            };
+
+            Gender gender = obj.ToDynamic().Person.Gender;
+            DateTime birthday = obj.ToDynamic().Person.Birthday;
+            int birthdayYear = obj.ToDynamic().Person.Birthday.Year;
+            string birthdayMonth = obj.ToDynamic().Person.Birthday.ToLocalTime().Month.ToString();
+            int count = obj.ToDynamic().Count;
+
+            gender.Is(Gender.Male);
+            birthday.Is(DateTime.Parse("1970/01/15"));
+            birthdayYear.Is(1970);
+            birthdayMonth.Is("1");
+            count.Is(1);
+        }
+
         // -------------------------
 
         [TestMethod]
