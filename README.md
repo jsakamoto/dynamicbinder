@@ -65,6 +65,34 @@ var value = (int)binder.FieldName;
 binder.FieldName = newValue;
 ```
 
+### Notice: retrieve class type return value from method calling
+
+the follow test code is fail.
+
+```C#
+object bar = foo.ToDynamic().GetBarObject();
+Assert.AreEqual("BarClass", bar.GetType().Name); // report actual is "DynamicBinder"!
+```
+
+Because C# dynamic conversion type to object is return DynamicBinder object it self.
+
+You should rewrite avobe test code as follow.
+
+```C#
+// etract C# dynamic object to DynamicBinder object, static type world.
+var retval = foo.ToDynamic().GetBarObject() as DynamicBinder;
+// DynamicBinder class exposed "Object" property to access the binding target object.
+Assert.AreEqual("BarClass", retval.Object.GetType().Name); // Green. Pass!
+```
+
+Of course, if you have the right type information, thease test codes can write follow:
+
+```C#
+var bar = (BarClass)foo.ToDynamic().GetBarObject();
+Assert.AreEqual("BarClass", bar.GetType().Name); // Green. Pass!
+```
+
+
 ### Late bind syntax
 
 #### Instance member access
