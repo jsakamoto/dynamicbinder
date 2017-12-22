@@ -1,4 +1,4 @@
-DynamicBinder and LateBinder
+DynamicBinder and LateBinder [![NuGet Package](https://img.shields.io/nuget/v/DynamicBinder.svg)](https://www.nuget.org/packages/DynamicBinder/)
 ============================
 
 What's this?
