@@ -1,24 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicBinder", "DynamicBinder\DynamicBinder.csproj", "{005BD7D1-5601-421F-8AB1-9EBBC2B0128D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FB5AF32D-767E-48F0-9B6F-09218AA26D07}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicBinder.Test", "DynamicBinder.Test\DynamicBinder.Test.csproj", "{E7A2E07D-DB30-4461-928A-16E0EDE25364}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicBinder", "DynamicBinder\DynamicBinder.csproj", "{005BD7D1-5601-421F-8AB1-9EBBC2B0128D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{96C3190E-5747-41F6-A888-C7C7293FB083}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicBinder.Test", "DynamicBinder.Test\DynamicBinder.Test.csproj", "{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicBinder.Test.Core", "DynamicBinder.Test\DynamicBinder.Test.Core.csproj", "{DA985DF9-0C2F-472F-BD3C-44BDD095436A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,12 +25,19 @@ Global
 		{005BD7D1-5601-421F-8AB1-9EBBC2B0128D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{005BD7D1-5601-421F-8AB1-9EBBC2B0128D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{005BD7D1-5601-421F-8AB1-9EBBC2B0128D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7A2E07D-DB30-4461-928A-16E0EDE25364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E7A2E07D-DB30-4461-928A-16E0EDE25364}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E7A2E07D-DB30-4461-928A-16E0EDE25364}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7A2E07D-DB30-4461-928A-16E0EDE25364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA985DF9-0C2F-472F-BD3C-44BDD095436A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA985DF9-0C2F-472F-BD3C-44BDD095436A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA985DF9-0C2F-472F-BD3C-44BDD095436A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA985DF9-0C2F-472F-BD3C-44BDD095436A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10F0692E-A4EE-4D1E-B2A1-CDE0B1CD0DBD}
 	EndGlobalSection
 EndGlobal

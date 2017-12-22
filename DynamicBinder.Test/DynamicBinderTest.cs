@@ -1,14 +1,13 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Toolbelt;
 using Toolbelt.DynamicBinderExtension;
+using Xunit;
 
 namespace DynamicBinderTest
 {
-    [TestClass]
     public class DynamicBinderTest
     {
-        [TestMethod]
+        [Fact]
         public void CallOverloadedPrivateInstanceMethod_by_Dynamic()
         {
             object obj = new TestTargetClass();
@@ -20,7 +19,7 @@ namespace DynamicBinderTest
             actual2.Is(29);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateInstanceProperty_by_Dynamic()
         {
             object obj = new TestTargetClass();
@@ -33,7 +32,7 @@ namespace DynamicBinderTest
             actual2.Is("Dynamic Buzz");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateInstanceField_by_Dynamic()
         {
             object obj = new TestTargetClass();
@@ -46,7 +45,7 @@ namespace DynamicBinderTest
             actual2.Is(DateTime.Parse("2016/12/10 03:07:04"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CallOverloadedPrivateStaticMethod_by_Dynamic()
         {
             var binder = DynamicBinder.Create<TestTargetClass>();
@@ -58,7 +57,7 @@ namespace DynamicBinderTest
             actual2.Is("Method-F(double): Strap / 19.28");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateStaticProperty_by_Dynamic()
         {
             var binder = DynamicBinder.Create(typeof(TestTargetClass));
@@ -78,7 +77,7 @@ namespace DynamicBinderTest
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateStaticField_by_Dynamic()
         {
             var obj = new TestTargetClass();
@@ -99,17 +98,17 @@ namespace DynamicBinderTest
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RetrieveClassObject_by_Dynamic()
         {
             var binder = DynamicBinder.Create<TestTargetClass>();
-           
+
             var subItem = binder.GetSubItem();
             ((string)subItem.Name).Is("John");
             ((int)subItem.Value).Is(40);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPropOfClassObject_by_Dynamic()
         {
             object obj = new TestTargetClass();
@@ -139,7 +138,7 @@ namespace DynamicBinderTest
 
         public enum Gender { Male, Female }
 
-        [TestMethod]
+        [Fact]
         public void GetPropOfAnonymousType_by_Dynamic()
         {
             object obj = new
@@ -168,7 +167,7 @@ namespace DynamicBinderTest
             count.Is(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void RetrieveReturnValueOfMethod()
         {
             object obj = new TestTargetClass();
@@ -178,7 +177,7 @@ namespace DynamicBinderTest
 
         // -------------------------
 
-        [TestMethod]
+        [Fact]
         public void CallOverloadedPrivateInstanceMethod_of_DerivedClass_by_Dynamic()
         {
             object obj = new DerivedTestTargetClass();
@@ -190,7 +189,7 @@ namespace DynamicBinderTest
             actual2.Is(29);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateInstanceProperty_of_DerivedClass_by_Dynamic()
         {
             object obj = new DerivedTestTargetClass();
@@ -203,7 +202,7 @@ namespace DynamicBinderTest
             actual2.Is("Dynamic Buzz");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateInstanceField_of_DerivedClass_by_Dynamic()
         {
             object obj = new DerivedTestTargetClass();
@@ -216,7 +215,7 @@ namespace DynamicBinderTest
             actual2.Is(DateTime.Parse("2016/12/10 03:07:04"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CallOverloadedPrivateStaticMethod_of_DerivedClass_by_Dynamic()
         {
             var binder = DynamicBinder.Create<DerivedTestTargetClass>();
@@ -228,7 +227,7 @@ namespace DynamicBinderTest
             actual2.Is("Method-F(double): Strap / 19.28");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateStaticProperty_of_DerivedClass_by_Dynamic()
         {
             var binder = DynamicBinder.Create(typeof(DerivedTestTargetClass));
@@ -248,7 +247,7 @@ namespace DynamicBinderTest
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateStaticField_of_DerivedClass_by_Dynamic()
         {
             var obj = new DerivedTestTargetClass();

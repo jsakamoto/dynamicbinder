@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Toolbelt;
 using Toolbelt.DynamicBinderExtension;
+using Xunit;
 
 namespace DynamicBinderTest
 {
-    [TestClass]
     public class LateBinderTest
     {
-        [TestMethod]
+        [Fact]
         public void CallOverloadedPrivateInstanceMethod_by_LateBinder()
         {
             object obj = new TestTargetClass();
-            
+
             obj.ToLateBind().Call("MethodC", "Adelie")
                 .IsInstanceOf<string>()
                 .Is("Method-C by string: Adelie");
@@ -24,7 +23,7 @@ namespace DynamicBinderTest
                 .Is(27);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateInstanceProperty_by_LateBinder()
         {
             object obj = new TestTargetClass();
@@ -38,7 +37,7 @@ namespace DynamicBinderTest
                 .Is("Buzz");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateInstanceField_by_LateBinder()
         {
             object obj = new TestTargetClass();
@@ -52,11 +51,11 @@ namespace DynamicBinderTest
                 .Is(DateTime.Parse("2015/11/09 02:06:03"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CallOverloadedPrivateStaticMethod_by_LateBinder()
         {
             var binder = LateBinder.Create(typeof(TestTargetClass));
-            
+
             binder.Call("MethodF", "Gentoo", 18)
                 .IsInstanceOf<string>()
                 .Is("Method-F(int): Gentoo / 18");
@@ -66,7 +65,7 @@ namespace DynamicBinderTest
                 .Is("Method-F(double): RockHoper / 31.4");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateStaticProperty_by_LateBinder()
         {
             var binder = LateBinder.Create<TestTargetClass>();
@@ -87,7 +86,7 @@ namespace DynamicBinderTest
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateStaticField_by_LateBinder()
         {
             object obj = new TestTargetClass();
@@ -109,14 +108,14 @@ namespace DynamicBinderTest
                 binder.Field["_FieldE"] = "Static Foo";
             }
         }
-        
+
         // -------------------------
 
-        [TestMethod]
+        [Fact]
         public void CallOverloadedPrivateInstanceMethod_of_DerivedClass_by_LateBinder()
         {
             object obj = new DerivedTestTargetClass();
-            
+
             obj.ToLateBind().Call("MethodC", "Adelie")
                 .IsInstanceOf<string>()
                 .Is("Method-C by string: Adelie");
@@ -126,7 +125,7 @@ namespace DynamicBinderTest
                 .Is(27);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateInstanceProperty_of_DerivedClass_by_LateBinder()
         {
             object obj = new DerivedTestTargetClass();
@@ -140,7 +139,7 @@ namespace DynamicBinderTest
                 .Is("Buzz");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateInstanceField_of_DerivedClass_by_LateBinder()
         {
             object obj = new DerivedTestTargetClass();
@@ -154,7 +153,7 @@ namespace DynamicBinderTest
                 .Is(DateTime.Parse("2015/11/09 02:06:03"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CallOverloadedPrivateStaticMethod_of_DerivedClass_by_LateBinder()
         {
             var binder = LateBinder.Create(typeof(DerivedTestTargetClass));
@@ -168,7 +167,7 @@ namespace DynamicBinderTest
                 .Is("Method-F(double): RockHoper / 31.4");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateStaticProperty_of_DerivedClass_by_LateBinder()
         {
             var binder = LateBinder.Create<DerivedTestTargetClass>();
@@ -189,7 +188,7 @@ namespace DynamicBinderTest
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAndSetPrivateStaticField_of_DerivedClass_by_LateBinder()
         {
             object obj = new DerivedTestTargetClass();
@@ -213,7 +212,7 @@ namespace DynamicBinderTest
         }
 
 
-        [TestMethod]
+        [Fact]
         public void CallOverloadedPrivateInstanceMethod_by_LateBinder_with_Cache()
         {
             object obj = new TestTargetClass();
