@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Toolbelt
 {
@@ -57,7 +55,7 @@ namespace Toolbelt
         }
 
         /// <summary>get the object that late binding taret.</summary>
-        public object Object { get { return _Target; } } 
+        public object Object { get { return _Target; } }
 
         public object Call(string methodName, params object[] args)
         {
@@ -94,8 +92,8 @@ namespace Toolbelt
         }
 
         internal T FindMember<T>(
-            string memberName, 
-            Func<Type, T> finder, 
+            string memberName,
+            Func<Type, T> finder,
             bool throwExceptionIfMemberNotFound = true,
             string memberSufix = ""
             ) where T : MemberInfo
