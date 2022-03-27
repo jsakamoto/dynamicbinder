@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Dynamic;
+using System.Globalization;
+using System.Reflection;
+using Toolbelt.DynamicBinderExtension;
 
 namespace Toolbelt
 {
@@ -10,6 +13,17 @@ namespace Toolbelt
         internal DynamicBinder(LateBinder accessor)
         {
             this._Binder = accessor;
+        }
+
+        public static dynamic CreateInstance<T>(params object[] args)
+        {
+            return CreateInstance(typeof(T), args);
+        }
+
+        public static dynamic CreateInstance(Type type, params object[] args)
+        {
+            var obj = Activator.CreateInstance(type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, args, default(CultureInfo));
+            return obj.ToDynamic();
         }
 
         public DynamicBinder(object target)

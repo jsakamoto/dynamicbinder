@@ -30,12 +30,30 @@ public class TestTargetClass
 
     private SubItemClass2 PropH { get; set; }
 
-    /// <summary>Constractor</summary>
+    /// <summary>
+    /// Public Constractor
+    /// </summary>
     public TestTargetClass()
     {
         this.PropA = "Fizz";
         this.PropG = new SubItemClass1("Sam", 33);
         this.PropH = new SubItemClass2("Alice", 29);
+    }
+
+    /// <summary>
+    /// Private Constractor 1
+    /// </summary>
+    private TestTargetClass(string propA) : this()
+    {
+        this.PropA = propA;
+    }
+
+    /// <summary>
+    /// Private Constractor 2
+    /// </summary>
+    private TestTargetClass(string propA, DateTime fieldB) : this(propA)
+    {
+        this._FieldB = fieldB;
     }
 
     private string MethodC(string name)

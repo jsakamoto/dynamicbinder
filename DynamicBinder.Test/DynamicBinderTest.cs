@@ -7,6 +7,54 @@ namespace DynamicBinderTest;
 public class DynamicBinderTest
 {
     [Fact]
+    public void CreateInstanceT_for_public_constructor()
+    {
+        var obj = DynamicBinder.CreateInstance<TestTargetClass>();
+        ((string)obj.PropA).Is("Fizz");
+        ((DateTime)obj._FieldB).ToString("yyyy/MM/dd HH:mm:ss").Is("2014/02/13 14:27:56");
+    }
+
+    [Fact]
+    public void CreateInstanceT_for_private_constructor_1()
+    {
+        var obj = DynamicBinder.CreateInstance<TestTargetClass>("Lorem");
+        ((string)obj.PropA).Is("Lorem");
+        ((DateTime)obj._FieldB).ToString("yyyy/MM/dd HH:mm:ss").Is("2014/02/13 14:27:56");
+    }
+
+    [Fact]
+    public void CreateInstanceT_for_private_constructor_2()
+    {
+        var obj = DynamicBinder.CreateInstance<TestTargetClass>("Ipsum", DateTime.Parse("2022/03/27 15:49:10"));
+        ((string)obj.PropA).Is("Ipsum");
+        ((DateTime)obj._FieldB).ToString("yyyy/MM/dd HH:mm:ss").Is("2022/03/27 15:49:10");
+    }
+
+    [Fact]
+    public void CreateInstance_for_public_constructor()
+    {
+        var obj = DynamicBinder.CreateInstance(typeof(TestTargetClass));
+        ((string)obj.PropA).Is("Fizz");
+        ((DateTime)obj._FieldB).ToString("yyyy/MM/dd HH:mm:ss").Is("2014/02/13 14:27:56");
+    }
+
+    [Fact]
+    public void CreateInstance_for_private_constructor_1()
+    {
+        var obj = DynamicBinder.CreateInstance(typeof(TestTargetClass), "Lorem");
+        ((string)obj.PropA).Is("Lorem");
+        ((DateTime)obj._FieldB).ToString("yyyy/MM/dd HH:mm:ss").Is("2014/02/13 14:27:56");
+    }
+
+    [Fact]
+    public void CreateInstance_for_private_constructor_2()
+    {
+        var obj = DynamicBinder.CreateInstance(typeof(TestTargetClass), "Ipsum", DateTime.Parse("2022/03/27 15:49:10"));
+        ((string)obj.PropA).Is("Ipsum");
+        ((DateTime)obj._FieldB).ToString("yyyy/MM/dd HH:mm:ss").Is("2022/03/27 15:49:10");
+    }
+
+    [Fact]
     public void CallOverloadedPrivateInstanceMethod_by_Dynamic()
     {
         object obj = new TestTargetClass();
