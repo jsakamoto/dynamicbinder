@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Toolbelt.DynamicBinderExtension;
 
 namespace Toolbelt
 {
@@ -13,6 +15,17 @@ namespace Toolbelt
 
         protected BindingFlags _BindingFlags;
 
+        public static LateBinder CreateInstance<T>(params object[] args)
+        {
+            return CreateInstance(typeof(T), args);
+        }
+
+        public static LateBinder CreateInstance(Type type, params object[] args)
+        {
+            var obj = Activator.CreateInstance(type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, args, default(CultureInfo));
+            return obj.ToLateBind();
+        }
+
         protected IDictionary<Type, IDictionary<string, MemberInfo>> _Cache;
 
         public PropertyBinder Prop { get; protected set; }
@@ -21,19 +34,19 @@ namespace Toolbelt
 
         public LateBinder(object target)
         {
-            Initi(target, target.GetType());
+            this.Initi(target, target.GetType());
         }
 
         protected LateBinder(object target, Type typeOfTarget)
         {
-            Initi(target, typeOfTarget);
+            this.Initi(target, typeOfTarget);
         }
 
         private void Initi(object target, Type typeOfTarget)
         {
-            _Target = target;
-            _TypeOfTarget = typeOfTarget;
-            _BindingFlags = BindingFlags.Public | BindingFlags.NonPublic | (target != null ? BindingFlags.Instance : BindingFlags.Static);
+            this._Target = target;
+            this._TypeOfTarget = typeOfTarget;
+            this._BindingFlags = BindingFlags.Public | BindingFlags.NonPublic | (target != null ? BindingFlags.Instance : BindingFlags.Static);
             this.Prop = new PropertyBinder(this);
             this.Field = new FieldBinder(this);
         }
@@ -50,22 +63,22 @@ namespace Toolbelt
 
         public LateBinder SetCache(IDictionary<Type, IDictionary<string, MemberInfo>> cache)
         {
-            _Cache = cache;
+            this._Cache = cache;
             return this;
         }
 
         /// <summary>get the object that late binding taret.</summary>
-        public object Object { get { return _Target; } }
+        public object Object { get { return this._Target; } }
 
         public object Call(string methodName, params object[] args)
         {
             var argTypes = args.Select(_ => _.GetType()).ToArray();
             var memberSufix = "(" + string.Join(",", argTypes.Select(t => t.FullName)) + ")";
-            var methodInfo = FindMember(
+            var methodInfo = this.FindMember(
                 methodName,
-                t => t.GetMethod(methodName, _BindingFlags, null, argTypes, null),
+                t => t.GetMethod(methodName, this._BindingFlags, null, argTypes, null),
                 memberSufix: memberSufix);
-            return methodInfo.Invoke(_Target, args);
+            return methodInfo.Invoke(this._Target, args);
         }
 
         protected static IEnumerable<Type> EnumType(Type type)
@@ -78,14 +91,14 @@ namespace Toolbelt
 
         protected IDictionary<string, MemberInfo> GetCacheOfMe()
         {
-            if (_Cache == null) return null;
+            if (this._Cache == null) return null;
             var cacheOfMe = default(IDictionary<string, MemberInfo>);
-            lock (_Cache)
+            lock (this._Cache)
             {
-                if (_Cache.TryGetValue(_TypeOfTarget, out cacheOfMe) == false)
+                if (this._Cache.TryGetValue(this._TypeOfTarget, out cacheOfMe) == false)
                 {
                     cacheOfMe = new Dictionary<string, MemberInfo>();
-                    _Cache.Add(_TypeOfTarget, cacheOfMe);
+                    this._Cache.Add(this._TypeOfTarget, cacheOfMe);
                 }
             }
             return cacheOfMe;
@@ -100,7 +113,7 @@ namespace Toolbelt
         {
             Func<T> findMember = () =>
             {
-                var memberInfo = EnumType(_TypeOfTarget)
+                var memberInfo = EnumType(this._TypeOfTarget)
                     .Select(t => finder(t))
                     .FirstOrDefault(m => m != null);
                 if (memberInfo == null && throwExceptionIfMemberNotFound)
@@ -108,7 +121,7 @@ namespace Toolbelt
                 return memberInfo;
             };
 
-            var cacheOfMe = GetCacheOfMe();
+            var cacheOfMe = this.GetCacheOfMe();
             if (cacheOfMe == null)
             {
                 return findMember();
@@ -134,31 +147,31 @@ namespace Toolbelt
 
             internal PropertyBinder(LateBinder accessor)
             {
-                _Binder = accessor;
+                this._Binder = accessor;
             }
 
             public PropertyInfo GetInfo(string propName, bool throwExceptionIfMemberNotFound = true)
             {
-                return _Binder.FindMember(propName, t => t.GetProperty(propName, _Binder._BindingFlags), throwExceptionIfMemberNotFound);
+                return this._Binder.FindMember(propName, t => t.GetProperty(propName, this._Binder._BindingFlags), throwExceptionIfMemberNotFound);
             }
 
             public object this[string propName]
             {
                 get
                 {
-                    var propInfo = GetInfo(propName);
-                    return propInfo.GetValue(_Binder._Target, null);
+                    var propInfo = this.GetInfo(propName);
+                    return propInfo.GetValue(this._Binder._Target, null);
                 }
                 set
                 {
-                    var propInfo = GetInfo(propName);
-                    propInfo.SetValue(_Binder._Target, value, null);
+                    var propInfo = this.GetInfo(propName);
+                    propInfo.SetValue(this._Binder._Target, value, null);
                 }
             }
 
             public bool Has(string propName)
             {
-                return GetInfo(propName, false) != null;
+                return this.GetInfo(propName, false) != null;
             }
         }
 
@@ -168,31 +181,31 @@ namespace Toolbelt
 
             internal FieldBinder(LateBinder accessor)
             {
-                _Binder = accessor;
+                this._Binder = accessor;
             }
 
             public FieldInfo GetInfo(string fieldName, bool throwExceptionIfMemberNotFound = true)
             {
-                return _Binder.FindMember(fieldName, t => t.GetField(fieldName, _Binder._BindingFlags), throwExceptionIfMemberNotFound);
+                return this._Binder.FindMember(fieldName, t => t.GetField(fieldName, this._Binder._BindingFlags), throwExceptionIfMemberNotFound);
             }
 
             public object this[string fieldName]
             {
                 get
                 {
-                    var fieldInfo = GetInfo(fieldName);
-                    return fieldInfo.GetValue(_Binder._Target);
+                    var fieldInfo = this.GetInfo(fieldName);
+                    return fieldInfo.GetValue(this._Binder._Target);
                 }
                 set
                 {
-                    var fieldInfo = GetInfo(fieldName);
-                    fieldInfo.SetValue(_Binder._Target, value);
+                    var fieldInfo = this.GetInfo(fieldName);
+                    fieldInfo.SetValue(this._Binder._Target, value);
                 }
             }
 
             public bool Has(string fieldName)
             {
-                return GetInfo(fieldName, false) != null;
+                return this.GetInfo(fieldName, false) != null;
             }
         }
     }

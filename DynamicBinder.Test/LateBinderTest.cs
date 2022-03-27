@@ -8,6 +8,54 @@ namespace DynamicBinderTest;
 public class LateBinderTest
 {
     [Fact]
+    public void CreateInstanceT_for_public_constructor()
+    {
+        var obj = LateBinder.CreateInstance<TestTargetClass>();
+        obj.Prop["PropA"].Is("Fizz");
+        ((DateTime)obj.Field["_FieldB"]).ToString("yyyy/MM/dd HH:mm:ss").Is("2014/02/13 14:27:56");
+    }
+
+    [Fact]
+    public void CreateInstanceT_for_private_constructor_1()
+    {
+        var obj = LateBinder.CreateInstance<TestTargetClass>("Lorem");
+        obj.Prop["PropA"].Is("Lorem");
+        ((DateTime)obj.Field["_FieldB"]).ToString("yyyy/MM/dd HH:mm:ss").Is("2014/02/13 14:27:56");
+    }
+
+    [Fact]
+    public void CreateInstanceT_for_private_constructor_2()
+    {
+        var obj = LateBinder.CreateInstance<TestTargetClass>("Ipsum", DateTime.Parse("2022/03/27 15:49:10"));
+        obj.Prop["PropA"].Is("Ipsum");
+        ((DateTime)obj.Field["_FieldB"]).ToString("yyyy/MM/dd HH:mm:ss").Is("2022/03/27 15:49:10");
+    }
+
+    [Fact]
+    public void CreateInstance_for_public_constructor()
+    {
+        var obj = LateBinder.CreateInstance(typeof(TestTargetClass));
+        obj.Prop["PropA"].Is("Fizz");
+        ((DateTime)obj.Field["_FieldB"]).ToString("yyyy/MM/dd HH:mm:ss").Is("2014/02/13 14:27:56");
+    }
+
+    [Fact]
+    public void CreateInstance_for_private_constructor_1()
+    {
+        var obj = LateBinder.CreateInstance(typeof(TestTargetClass), "Lorem");
+        obj.Prop["PropA"].Is("Lorem");
+        ((DateTime)obj.Field["_FieldB"]).ToString("yyyy/MM/dd HH:mm:ss").Is("2014/02/13 14:27:56");
+    }
+
+    [Fact]
+    public void CreateInstance_for_private_constructor_2()
+    {
+        var obj = LateBinder.CreateInstance(typeof(TestTargetClass), "Ipsum", DateTime.Parse("2022/03/27 15:49:10"));
+        obj.Prop["PropA"].Is("Ipsum");
+        ((DateTime)obj.Field["_FieldB"]).ToString("yyyy/MM/dd HH:mm:ss").Is("2022/03/27 15:49:10");
+    }
+
+    [Fact]
     public void CallOverloadedPrivateInstanceMethod_by_LateBinder()
     {
         object obj = new TestTargetClass();
