@@ -14,6 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "README", "README", "{96C319
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicBinder.Test", "DynamicBinder.Test\DynamicBinder.Test.csproj", "{DA985DF9-0C2F-472F-BD3C-44BDD095436A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub Actions", "GitHub Actions", "{F770FA13-066F-4457-A073-3385609B88EF}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\unit-tests.yml = .github\workflows\unit-tests.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
