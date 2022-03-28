@@ -1,0 +1,19 @@
+v.1.5.1
+- Enhance: Add .NET Standard 2.0 support.
+
+v.1.5
+- Enhance: Add "Object" property which expose the object that binding target.
+- Fix bug: Can not extract class type object by DynamicBinder.
+
+v.1.4
+- Fix bug: Can not retrieve class type properties by DynamicBinder.
+
+v.1.3
+- Add avility of exposing nested private object graph.
+
+v.1.2
+- Add avility of caching System.Reflection.MemberInfo (use SetCache(disctionary) method)
+- Add GetInfo(name) method on PropertyBinder and FieldBinder that returned System.Reflection.MemberInfo.
+
+v.1.1
+- Support base class members access.
