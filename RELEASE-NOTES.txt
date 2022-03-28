@@ -1,3 +1,7 @@
+v.2.0.0
+- Enhance: Add DynamicBinder.CreateInstance() and LateBinder.CreateInstance().
+- Drop support for old .NET Framework versions.
+
 v.1.5.1
 - Enhance: Add .NET Standard 2.0 support.
 
