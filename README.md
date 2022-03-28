@@ -1,4 +1,4 @@
-﻿# DynamicBinder and LateBinder [![NuGet Package](https://img.shields.io/nuget/v/DynamicBinder.svg)](https://www.nuget.org/packages/DynamicBinder/)
+﻿# DynamicBinder and LateBinder [![NuGet Package](https://img.shields.io/nuget/v/DynamicBinder.svg)](https://www.nuget.org/packages/DynamicBinder/) [![unit tests](https://github.com/jsakamoto/dynamicbinder/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/jsakamoto/dynamicbinder/actions/workflows/unit-tests.yml)
 
 ## What's this?
 
