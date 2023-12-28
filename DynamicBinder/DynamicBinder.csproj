@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <Title>DynamicBinder and LateBinder</Title>
     <Authors>J.Sakamoto</Authors>
     <Company>J.Sakamoto</Company>
-    <Copyright>Copyright © J.Sakamoto 2014-2022</Copyright>
+    <Copyright>Copyright © J.Sakamoto 2014-2023</Copyright>
     <Description>This library allows you dynamic access to object methods, properties, and fields by using the reflection technology of .NET, regardless of whether they are private members. You can access both object instance members and class static members by name that specified string argument at runtime, not compile-time, or C# 4.0 "dynamic" syntax.
     </Description>
     <PackageReleaseNotes>(Please write the package release notes in "../RELEASE-NOTES.txt")</PackageReleaseNotes>

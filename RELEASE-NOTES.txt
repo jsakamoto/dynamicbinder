@@ -1,3 +1,6 @@
+v.2.1.0
+- Enhance: Add support for calling methods with "ref" and "out" arguments.
+
 v.2.0.0
 - Enhance: Add DynamicBinder.CreateInstance() and LateBinder.CreateInstance().
 - Drop support for old .NET Framework versions.
