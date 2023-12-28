@@ -72,11 +72,24 @@ namespace Toolbelt
 
         public object Call(string methodName, params object[] args)
         {
-            var argTypes = args.Select(_ => _.GetType()).ToArray();
+            var argTypes = args.Select(_ => _ != null ? _.GetType() : typeof(object)).ToArray();
             var memberSufix = "(" + string.Join(",", argTypes.Select(t => t.FullName)) + ")";
             var methodInfo = this.FindMember(
                 methodName,
-                t => t.GetMethod(methodName, this._BindingFlags, null, argTypes, null),
+                finder: t =>
+                {
+                    var method = t.GetMethod(methodName, this._BindingFlags, null, argTypes, null);
+                    if (method != null) return method;
+                    var methods = t.GetMethods(this._BindingFlags).Where(m => m.Name == methodName).ToArray();
+                    if (methods.Length == 1) return methods.First();
+                    return methods.Where(m =>
+                    {
+                        var parameters = m.GetParameters();
+                        return parameters
+                            .Select((p, index) => p.ParameterType.FullName.TrimEnd('&') == argTypes[index].FullName)
+                            .All(_ => _);
+                    }).FirstOrDefault();
+                },
                 memberSufix: memberSufix);
             return methodInfo.Invoke(this._Target, args);
         }

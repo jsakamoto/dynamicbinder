@@ -4,16 +4,16 @@
 
 This is the class library for .NET.
 
-This library allows you dynamic access to object methods, properties, and fields by using the reflection technology of .NET, regardless of whether they are private members.
+This library allows you dynamic access to object methods, properties, and fields using the reflection technology of .NET, regardless of whether they are private members.
 
-You can access both object instance members and class static members by name that specified string argument at runtime, not compile-time, or C# 4.0 "dynamic" syntax.
+You can access both objects' instance members and classes' static members by name that specified string argument at runtime, not compile-time, or C# 4.0 "dynamic" syntax.
 
 ## How to install?
 
 You can install this library via [NuGet](https://www.nuget.org/packages/DynamicBinder/).
 
-```powershell
-PM> Install-Package DynamicBinder
+```shell
+> dotnet add package DynamicBinder
 ```
 
 ## Usage - C# "dynamic" syntax
@@ -46,14 +46,15 @@ using Toolbelt.DynamicBinderExtension;
 ...
 var obj = new MyClass();
 ...
-// call instance method.
-var retval = (int)obj.ToDynamic().MethodName(arg1, arg2);
+// Call an instance method.
+// (You can pass ref & out arguments.)
+var retval = (int)obj.ToDynamic().MethodName(arg1, ref arg2, out int arg3);
 
-// get & set instance property.
+// Get or set an instance property.
 var value = (int)obj.ToDynamic().PropName;
 obj.ToDynamic().PropName = newValue;
 
-// get & set instance field.
+// Get or set an instance field.
 var value = (int)obj.ToDynamic().FieldName;
 obj.ToDynamic().FieldName = newValue;
 ```
@@ -66,36 +67,40 @@ After importing (opening) namespace `Toolbelt`, you can use `DynamicBinder.Creat
 using Toolbelt;
 ...
 var binder = DynamicBinder.Create(typeof(Foo));
-// call static method.
-var retval = (int)binder.MethodName(arg1, arg2);
 
-// get & set static property.
+// Call a static method.
+// (You can pass ref & out arguments.)
+var retval = (int)binder.MethodName(arg1, ref arg2, out int arg3);
+
+// Get or set a static property.
 var value = (int)binder.PropName;
 binder.PropName = newValue;
 
-// get & set static field.
+// Get or set a static field.
 var value = (int)binder.FieldName;
 binder.FieldName = newValue;
 ```
 
-### Notice: retrieve class type return value from method calling
+### NOTICE: Retrieving a type information of the returned value from the method calling
 
-The following test code will be failed.
+Retrieving a type information of the return value from the method calling
+
+The following test code will fail.
 
 ```csharp
 object bar = foo.ToDynamic().GetBarObject();
 
-// 👇 It will be reported "actual is `DynamicBinder`" !
+// 👇 It will report "actual is `DynamicBinder`" !
 Assert.AreEqual("BarClass", bar.GetType().Name); 
 ```
 
-You should rewrite avobe test code as follow.
+You should rewrite the above test code as follows.
 
 ```csharp
-// Extract C# dynamic object to `DynamicBinder` object by `as` casting.
+// Extract a `DynamicBinder` object from the C# dynamic object by casting with `as`.
 var retval = foo.ToDynamic().GetBarObject() as DynamicBinder;
 
-// `DynamicBinder` class exposes the `Object` property to access the binding target object.
+// The `DynamicBinder` class exposes the `Object` property to access the bound target object.
 Assert.AreEqual("BarClass", retval.Object.GetType().Name); // Green. Pass!
 ```
 
@@ -134,25 +139,21 @@ After importing (opening) namespace `Toolbelt.DynamicBinderExtension`, you can u
 
 `LateBinder` has follow members.
 
----
-
--  `Call(name, params[] args)` method
+- `Call(name, params[] args)` method
 - `Prop[name]` property
 - `Field[name]` property
-
----
 
 ```csharp
 using Toolbelt.DynamicBinderExtension;
 ...
-// call method.
+// Call an instance method.
 var retval = (int)obj.ToLateBind().Call("MethodName", arg1, arg2);
 
-// get & set property.
+// Get or set an instance property.
 var value = (int)obj.ToLateBind().Prop["PropName"];
 obj.ToLateBind().Prop["PropName"] = newValue;
 
-// get & set field.
+// Get or set an instance field.
 var value = (int)obj.ToLateBind().Field["FieldName"];
 obj.ToLateBind().Field["FieldName"] = newValue;
 ```
@@ -165,16 +166,39 @@ After importing (opening) namespace `Toolbelt`, you can use `LateBinder.Create<T
 using Toolbelt;
 ...
 var binder = LateBinder.Create<Foo>();
-// call static method.
+// Call a static method.
 var retval = (int)binder.Call("MethodName", arg1, arg2);
 
-// get & set static property.
+// Get or set a static property.
 var value = (int)binder.Prop["PropName"];
 binder.Prop["PropName"] = newValue;
 
-// get & set static field.
+// Get or set a static field.
 var value = (int)binder.Field["FieldName"];
 binder.Field["FieldName"] = newValue;
+```
+
+### Call methods with `ref` & `out` arguments
+
+To call methods with `ref` & `out` arguments, you can't pass those arguments to the `Call` method of the late-binder directly, which is different from using the "dynamic" syntax. Instead, follow the instructions below.
+
+```csharp
+// For example, if the definition of the "MethodName" static method is:
+
+// static void MethodName(int x, ref int y, out int z){
+//    z = x * y;
+//    y = y + 1;
+// }
+
+// 1. Pack all of the arguments into an object array.
+var args = new object[] { 3, 4, default(int) };
+
+// 2. Pass it to the 2nd argument of the "Call" method.
+binder.Call("MethodName", args);
+
+// 3. Then, the "args" array will be updated.
+// args[1] -> 5
+// args[2] -> 12
 ```
 
 ## Note

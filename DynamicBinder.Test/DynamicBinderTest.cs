@@ -314,4 +314,28 @@ public class DynamicBinderTest
             binder._FieldE = "Static Foo";
         }
     }
+
+    [Fact]
+    public void CallPrivateInstanceMethod_with_ref_and_out_Argument_by_Dynamic()
+    {
+        object obj = new TestTargetClass();
+
+        var y = 6;
+        obj.ToDynamic().MethodG(5, ref y, out int z);
+
+        y.Is(7);
+        z.Is(30);
+    }
+
+    [Fact]
+    public void CallPrivateStaticMethod_with_ref_and_out_Argument_by_Dynamic()
+    {
+        var binder = DynamicBinder.Create<TestTargetClass>();
+
+        var y = 6;
+        binder.MethodH(5, ref y, out int z);
+
+        y.Is(16);
+        z.Is(10);
+    }
 }

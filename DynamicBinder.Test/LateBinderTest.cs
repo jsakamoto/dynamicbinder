@@ -257,7 +257,6 @@ public class LateBinderTest
         }
     }
 
-
     [Fact]
     public void CallOverloadedPrivateInstanceMethod_by_LateBinder_with_Cache()
     {
@@ -275,5 +274,29 @@ public class LateBinderTest
         obj.ToLateBind(cache).Call("MethodC", "Emperor")
             .IsInstanceOf<string>()
             .Is("Method-C by string: Emperor");
+    }
+
+    [Fact]
+    public void CallPrivateInstanceMethod_with_ref_and_out_Argument_by_LateBinder()
+    {
+        object obj = new TestTargetClass();
+
+        var args = new object[] { 3, 4, default(int) };
+        obj.ToLateBind().Call("MethodG", args);
+
+        args[1].Is(5);
+        args[2].Is(12);
+    }
+
+    [Fact]
+    public void CallPrivateStaticMethod_with_ref_and_out_Argument_by_LateBinder()
+    {
+        var binder = LateBinder.Create<TestTargetClass>();
+
+        var args = new object[] { 3, 4, default(int) };
+        binder.Call("MethodH", args);
+
+        args[1].Is(10);
+        args[2].Is(6);
     }
 }

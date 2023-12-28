@@ -66,6 +66,12 @@ public class TestTargetClass
         return age;
     }
 
+    private void MethodG(int x, ref int y, out int z)
+    {
+        z = x * y;
+        y = y + 1;
+    }
+
     public SubItemClass1 CreateSubItem1()
     {
         return new SubItemClass1("Jude", 47);
@@ -86,6 +92,12 @@ public class TestTargetClass
     private static string MethodF(string name, double age)
     {
         return "Method-F(double): " + name + " / " + age.ToString();
+    }
+
+    private static void MethodH(int x, ref int y, out int z)
+    {
+        z = x * 2;
+        y = y + z;
     }
 
     private static SubItemClass2 GetSubItem()
