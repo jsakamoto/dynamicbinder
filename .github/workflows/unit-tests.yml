@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checkout the code
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      # Install .NET Core SDK
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+      # Install .NET SDK
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.*
+          dotnet-version: 8.0.*
 
       # Perform unit tests
       - name: Perform unit tests
