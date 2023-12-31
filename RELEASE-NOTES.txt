@@ -1,3 +1,6 @@
+v.2.2.0
+- Enhance: Allow dynamic method call return values to be used as parameters in a method.
+
 v.2.1.0
 - Enhance: Add support for calling methods with "ref" and "out" arguments.
 
