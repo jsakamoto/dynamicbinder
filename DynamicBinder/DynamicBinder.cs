@@ -22,6 +22,8 @@ namespace Toolbelt
 
         public static dynamic CreateInstance(Type type, params object[] args)
         {
+            Binder.UnwrapBinder(args);
+
             var obj = Activator.CreateInstance(type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, args, default(CultureInfo));
             return obj.ToDynamic();
         }
@@ -34,8 +36,11 @@ namespace Toolbelt
         /// <summary>get the object that dynamic binding taret.</summary>
         public object Object { get { return this._Binder.Object; } }
 
+
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
+            Binder.UnwrapBinder(args);
+
             if (base.TryInvokeMember(binder, args, out result)) return true;
             result = Wrap(this._Binder.Call(binder.Name, args));
             return true;

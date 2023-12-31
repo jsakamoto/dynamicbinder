@@ -55,6 +55,21 @@ public class DynamicBinderTest
     }
 
     [Fact]
+    public void CreateInstance_with_DynamicObject_by_Dynamic()
+    {
+        // Given
+        var testTarget = DynamicBinder.CreateInstance<TestTargetClass>();
+        var subItemA = testTarget.CreateSubItem1();
+
+        // When
+        var subItemB = DynamicBinder.CreateInstance<TestTargetClass.SubItemClass1>(subItemA);
+
+        // Then
+        ((string)subItemB.Name).Is("Jude");
+        ((int)subItemB.Value).Is(47);
+    }
+
+    [Fact]
     public void CallOverloadedPrivateInstanceMethod_by_Dynamic()
     {
         object obj = new TestTargetClass();
@@ -337,5 +352,20 @@ public class DynamicBinderTest
 
         y.Is(16);
         z.Is(10);
+    }
+
+    [Fact]
+    public void RetrieveObject_and_UseIt_by_Dynamic()
+    {
+        // Given
+        var binder = DynamicBinder.Create<TestTargetClass>();
+        var subItem = binder.GetSubItem();
+
+        // When
+        string name = binder.GetNameOfSubItem(subItem);
+
+        // Then
+        name.Is("John");
+        ((int)subItem.Value).Is(40);
     }
 }

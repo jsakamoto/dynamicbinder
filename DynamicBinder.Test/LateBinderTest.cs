@@ -56,6 +56,21 @@ public class LateBinderTest
     }
 
     [Fact]
+    public void CreateInstance_with_DynamicObject_by_Dynamic()
+    {
+        // Given
+        var testTarget = LateBinder.CreateInstance<TestTargetClass>();
+        var subItemA = testTarget.Call("CreateSubItem1").ToLateBind();
+
+        // When
+        var subItemB = LateBinder.CreateInstance<TestTargetClass.SubItemClass1>(subItemA);
+
+        // Then
+        subItemB.Prop["Name"].Is("Jude");
+        subItemB.Prop["Value"].Is(47);
+    }
+
+    [Fact]
     public void CallOverloadedPrivateInstanceMethod_by_LateBinder()
     {
         object obj = new TestTargetClass();
@@ -298,5 +313,20 @@ public class LateBinderTest
 
         args[1].Is(10);
         args[2].Is(6);
+    }
+
+    [Fact]
+    public void RetrieveObject_and_UseIt_by_LateBinder()
+    {
+        // Given
+        var binder = LateBinder.Create<TestTargetClass>();
+        var subItem = binder.Call("GetSubItem").ToLateBind();
+
+        // When
+        var name = binder.Call("GetNameOfSubItem", subItem) as string;
+
+        // Then
+        name.Is("John");
+        ((int)subItem.Prop["Value"]).Is(40);
     }
 }

@@ -22,6 +22,7 @@ namespace Toolbelt
 
         public static LateBinder CreateInstance(Type type, params object[] args)
         {
+            Binder.UnwrapBinder(args);
             var obj = Activator.CreateInstance(type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, args, default(CultureInfo));
             return obj.ToLateBind();
         }
@@ -72,6 +73,7 @@ namespace Toolbelt
 
         public object Call(string methodName, params object[] args)
         {
+            Binder.UnwrapBinder(args);
             var argTypes = args.Select(_ => _ != null ? _.GetType() : typeof(object)).ToArray();
             var memberSufix = "(" + string.Join(",", argTypes.Select(t => t.FullName)) + ")";
             var methodInfo = this.FindMember(

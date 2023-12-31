@@ -9,6 +9,7 @@ public class TestTargetClass
         public string Name { get; set; }
         private int Value { get; set; }
         public SubItemClass1(string name, int value) { this.Name = name; this.Value = value; }
+        public SubItemClass1(SubItemClass1 subItem) { this.Name = subItem.Name; this.Value = subItem.Value; }
         public override string ToString() { return "Good Job!"; }
     }
 
@@ -103,6 +104,11 @@ public class TestTargetClass
     private static SubItemClass2 GetSubItem()
     {
         return new SubItemClass2("John", 40);
+    }
+
+    private static string GetNameOfSubItem(SubItemClass2 subItem)
+    {
+        return subItem.Name;
     }
 }
 
